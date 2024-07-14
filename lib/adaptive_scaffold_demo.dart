@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
+import 'qrcodePage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -95,6 +96,13 @@ class _MyHomePageState extends State<MyHomePage> {
         setState(() {
           _selectedTab = index;
         });
+        if (index == 1) {
+          // 假设 QRCodePage 是第二个选项
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => QRCodePage()),
+          );
+        }
       },
       destinations: const <NavigationDestination>[
         NavigationDestination(
@@ -103,9 +111,9 @@ class _MyHomePageState extends State<MyHomePage> {
           label: 'Inbox',
         ),
         NavigationDestination(
-          icon: Icon(Icons.article_outlined),
-          selectedIcon: Icon(Icons.article),
-          label: 'Articles',
+          icon: Icon(Icons.qr_code_outlined),
+          selectedIcon: Icon(Icons.qr_code),
+          label: 'QRCode',
         ),
         NavigationDestination(
           icon: Icon(Icons.chat_outlined),

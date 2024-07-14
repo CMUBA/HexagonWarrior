@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
+import 'qrcodePage.dart';
 
 /// A more functional demo of the usage of the adaptive layout helper widgets.
 /// Specifically, it is built using an [AdaptiveLayout] and uses static helpers
@@ -221,8 +222,8 @@ class _MyHomePageState extends State<MyHomePage>
         icon: Icon(Icons.inbox),
       ),
       NavigationDestination(
-        label: 'Articles',
-        icon: Icon(Icons.article_outlined),
+        label: 'QrCode',
+        icon: Icon(Icons.qr_code),
       ),
       NavigationDestination(
         label: 'Chat',
@@ -281,7 +282,7 @@ class _MyHomePageState extends State<MyHomePage>
                         begin: -2,
                         controller: _articleIconSlideController,
                         icon: Icons.article_outlined,
-                        label: 'Articles',
+                        label: 'QrCode',
                       ),
                       slideInNavigationItem(
                         begin: -3,
@@ -324,21 +325,28 @@ class _MyHomePageState extends State<MyHomePage>
           body: SlotLayout(
             config: <Breakpoint, SlotLayoutConfig?>{
               Breakpoints.standard: SlotLayout.from(
-                key: const Key('body'),
-                // The conditional here is for navigation screens. The first
-                // screen shows the main screen and every other screen shows
-                //  ExamplePage.
-                builder: (_) => (_navigationIndex == 0)
-                    ? Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 32, 0, 0),
-                        child: _ItemList(
-                          selected: selected,
-                          items: _allItems,
-                          selectCard: selectCard,
-                        ),
-                      )
-                    : const _ExamplePage(),
-              ),
+                  key: const Key('body'),
+                  // The conditional here is for navigation screens. The first
+                  // screen shows the main screen and every other screen shows
+                  //  ExamplePage.
+                  builder: (_) {
+                    switch (_navigationIndex) {
+                      case 0:
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 32, 0, 0),
+                          child: _ItemList(
+                            selected: selected,
+                            items: _allItems,
+                            selectCard: selectCard,
+                          ),
+                        );
+                      case 1:
+                        return QRCodePage();
+                      default:
+                        // 處理其他情況或返回一個預設的 Widget
+                        return _ExamplePage(); // 這裡僅作為示例，你應該根據實際需求返回合適的 Widget
+                    }
+                  }),
             },
           ),
           secondaryBody: _navigationIndex == 0
@@ -364,6 +372,12 @@ class _MyHomePageState extends State<MyHomePage>
                 // default offset transition.
                 outAnimation: AdaptiveScaffold.topToBottom,
                 builder: (_) => AdaptiveScaffold.standardBottomNavigationBar(
+                  currentIndex: _navigationIndex,
+                  onDestinationSelected: (int index) {
+                    setState(() {
+                      _navigationIndex = index;
+                    });
+                  },
                   destinations: destinations,
                 ),
               )
